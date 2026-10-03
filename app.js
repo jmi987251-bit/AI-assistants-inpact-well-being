@@ -260,6 +260,7 @@
       age: state.t1 ? (state.t1.age || '') : '',
       edu: state.t1 ? (state.t1.edu || '') : '',
       ai_exp: state.t1 ? (state.t1.ai_exp || '') : '',
+      t2History: user.t2History || {},
       started: state.startedAt, ended: new Date().toISOString()
     };
     all.forEach(function (b) { if (b.type === 'scale') r[b.id] = scoreOf(b.id, all); });
@@ -477,7 +478,12 @@
       if (el) el.scrollIntoView({ block: 'center' });
       return alert('还有题目未作答，请完成后再提交');
     }
-    state.t2 = r.data;
+   state.t2 = r.data;
+    //===== 新增开始 =====
+    if (!user.t2History) user.t2History = {};
+    user.t2History[state.day] = r.data;
+    saveUser();
+    //===== 新增结束 =====
     $('btnT2').disabled = true;
     finish();
   };
