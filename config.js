@@ -28,7 +28,7 @@ window.APP_CONFIG = {
      第 totalDays+1 天起显示“实验已全部完成”。 */
   "study": {
     "totalDays": 7,
-    "t2Days": "all"
+    "t2Days": "[1,7]"
   },
 
   /* ── 实时完成情况上报（可选，默认关闭） ─────────────────────
