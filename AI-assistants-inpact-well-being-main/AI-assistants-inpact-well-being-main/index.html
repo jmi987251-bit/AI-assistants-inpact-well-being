@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>生成式AI对话体验研究</title>
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/config.js"></script>
+</head>
+<body>
+<div id="modeBanner" class="banner hidden"></div>
+
+<div class="wrap">
+  <h1>生成式AI对话体验研究</h1>
+
+  <section id="step-login" class="card">
+    <h2>欢迎参与</h2>
+    <p>本研究为期 <b>7 天</b>：从您第一次与AI对话当天算作第 1 天，此后每天登录完成一次对话。请全程使用<b>同一个手机号</b>登录，页面会自动记录您的进度，并提示今天是第几天。</p>
+    <label class="pid">手机号（将作为您的实验编号）
+      <input type="tel" id="phone" placeholder="请输入11位手机号" maxlength="11" inputmode="numeric">
+    </label>
+    <div class="row">
+      <button id="btnLogin" class="primary">进入</button>
+    </div>
+    <p class="hint">首次参与需阅读知情同意书并填写基线问卷（约 20–30 分钟）；之后每天约 10–15 分钟。建议每天在相近的时间段完成。</p>
+  </section>
+
+  <section id="step-consent" class="card hidden">
+    <h2>知情同意</h2>
+    <p>本研究由北京语言大学研究团队开展，旨在了解大学生与生成式AI对话的体验。首次参与约 20–30 分钟，此后每天约 10–15 分钟。</p>
+    <ul>
+      <li>实验为期 7 天：从您第一次与AI对话当天算作第 1 天，每天完成一次对话，请尽量连续坚持。</li>
+      <li>您将被分配到两种不同的对话风格之一，这是研究设计的一部分。</li>
+      <li>数据仅用于学术研究，以您的手机号作为唯一编号保存，不记录姓名、学号等其他身份信息。</li>
+      <li>您可以随时无条件退出，且不影响任何权益。</li>
+      <li>若对话过程中感到不适，可随时停止；页面提供心理支持资源信息。</li>
+    </ul>
+    <div class="groupsel" id="groupSel"></div>
+    <label class="check"><input type="checkbox" id="consent"> 我已阅读并同意上述说明，自愿参加本研究。</label>
+    <button id="btnConsent" class="primary">同意并开始</button>
+  </section>
+
+  <section id="step-t1" class="card hidden">
+    <h2>第一部分：基本情况与近期状态</h2>
+    <p class="hint">请按真实感受作答，所有题目均为必答。</p>
+    <div id="t1Form"></div>
+    <button id="btnT1" class="primary">提交并进入对话</button>
+  </section>
+
+  <section id="step-chat" class="card hidden">
+    <h2>今日对话</h2>
+    <div id="dayBar" class="daybar"></div>
+    <p class="hint">下面的第一句话已由系统代您发出，请像平时聊天一样继续与它对话，至少完成 <b id="minTurns">7</b> 个来回。</p>
+    <div id="chatLog" class="chat"></div>
+    <div class="composer">
+      <textarea id="chatInput" rows="3" placeholder="请输入你想说的话…"></textarea>
+      <div class="row">
+        <span id="turnInfo" class="hint">第 0 / 7 轮</span>
+        <button id="btnSend" class="primary">发送</button>
+        <button id="btnEndChat" class="ghost" disabled>结束对话，进入最后一部分</button>
+      </div>
+      <p id="chatErr" class="err hidden"></p>
+    </div>
+  </section>
+
+  <section id="step-t2" class="card hidden">
+    <h2>对话后的感受</h2>
+    <div id="t2Form"></div>
+    <button id="btnT2" class="primary">提交并完成</button>
+  </section>
+
+  <section id="step-done" class="card hidden">
+    <h2 id="doneTitle">已完成，感谢参与！</h2>
+    <p id="doneText"></p>
+    <p id="debriefText" class="hidden">本研究比较了两种AI对话风格对您感受的影响。您接触的是：<b id="condLabel"></b> 版本。这是研究设计的一部分，两组在内容上并无优劣之分。</p>
+
+    <div class="codebox">
+      <b>请复制下面的结果码，粘贴回问卷（这是您完成今天实验的凭证）</b>
+      <textarea id="resultCode" rows="4" readonly></textarea>
+      <div class="row">
+        <button id="btnCopy" class="ghost">复制结果码</button>
+        <button id="btnDownload" class="ghost">下载完整记录（含对话原文）</button>
+      </div>
+    </div>
+
+    <div class="resources">
+      <b>心理支持资源</b>
+      <p>如果对话或问卷让你感到不适，可联系学校心理咨询中心，或拨打 24 小时心理援助热线 12356。你也可以使用全国希望24热线 400-161-9995。</p>
+    </div>
+    <p class="hint">关闭页面前请确认已提交结果码。再次感谢你的参与。</p>
+  </section>
+</div>
+
+<p class="foot"><a href="admin.html">研究者入口</a></p>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
