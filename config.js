@@ -264,17 +264,6 @@ window.APP_CONFIG = {
           "我愿意参与现实生活中的集体活动"
         ]
       },
-      {
-        "id": "humanness",
-        "type": "scale",
-        "anchor": "likert7",
-        "score": "mean",
-        "title": "人-AI 人格感知一致性（2题）",
-        "items": [
-          "我觉得这个AI的性格和我很像",
-          "我认为这个AI思考问题的方式与我相似"
-        ]
-      }
     ],
     "t2": [
       {
@@ -358,7 +347,18 @@ window.APP_CONFIG = {
           "7 非常同意"
         ],
         "attention": "4 中立"
-      }
+      },
+      {
+    "id": "humanness",
+    "type": "scale",
+    "anchor": "likert7",
+    "score": "mean",
+    "title": "人-AI 人格感知一致性（2题）",
+    "items": [
+      "我觉得这个AI的性格和我很像",
+      "我认为这个AI思考问题的方式与我相似"
+    ]
+  }
     ]
   }
 };
