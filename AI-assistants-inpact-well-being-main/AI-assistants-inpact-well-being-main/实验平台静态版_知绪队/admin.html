@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>研究者数据中心 - 生成式AI对话体验研究</title>
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/config.js"></script>
+</head>
+<body>
+<div class="wrap wrap-wide">
+  <h1>研究者数据中心 <span class="sub">生成式AI对话体验研究（七日实验）</span></h1>
+
+  <section id="sec-login" class="card">
+    <h2>研究者登录</h2>
+    <p class="hint">本页面仅供研究团队成员使用，用于汇总与导出实验数据。登录密码见团队内部说明（config.js 中可修改）。</p>
+    <label class="pid">登录密码
+      <input type="password" id="pwd" placeholder="请输入研究者密码">
+    </label>
+    <div class="row">
+      <button id="btnLogin" class="primary">登录</button>
+      <span id="loginErr" class="err hidden"></span>
+      <a class="hint backlink" href="index.html">返回实验页面</a>
+    </div>
+  </section>
+
+  <section id="sec-panel" class="card hidden">
+    <h2>数据概览</h2>
+    <div id="stats" class="stats"></div>
+
+    <h2 class="sec-gap">被试完成情况（每天）</h2>
+    <p class="hint">每行一名被试（手机号），列为实验第 1–7 天对应的日期（鼠标悬停可看日期）。<b>✓</b> = 当天已完成对话；<b>灰色✓</b> = 仅服务器实时上报（尚未回收结果码）；<b>!</b> = 当天触发危机词，需人工核查；<b>·</b> = 该天已过去但未完成。可按「今日」列当天催促未完成的被试。</p>
+    <div class="row" style="margin-top:0">
+      <button id="btnMatrix" class="primary">导出被试总览 CSV</button>
+      <button id="btnRefreshRemote" class="hidden">从服务器刷新实时数据</button>
+      <span id="remoteMsg" class="hint"></span>
+    </div>
+    <div class="tablewrap mtxwrap">
+      <table id="mtxTable">
+        <thead id="mtxHead"></thead>
+        <tbody id="mtxBody"></tbody>
+      </table>
+    </div>
+
+    <h2 class="sec-gap">导入数据</h2>
+    <p class="hint">方式一：把被试粘贴回问卷的<b>结果码</b>（或问卷平台导出的整列）粘贴到下面框中，每行一条，v1/v2/v3 旧新格式均兼容；方式二：上传结果码 txt 文件、或被试页面「下载完整记录」得到的 json 文件（可多选）。同一条会话（相同 sid）重复导入会自动覆盖，不会产生重复记录。</p>
+    <textarea id="codes" rows="6" placeholder="每行一个结果码，也可以直接粘贴问卷平台导出的一整列…"></textarea>
+    <div class="row">
+      <button id="btnImportText" class="primary">导入上方结果码</button>
+      <label class="btnfile">上传文件（txt / json）<input type="file" id="files" multiple accept=".txt,.json" hidden></label>
+      <span id="importMsg" class="hint"></span>
+    </div>
+
+    <h2 class="sec-gap">已入库会话记录（<span id="nRec">0</span> 条）</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th>#</th><th>手机号</th><th>组别</th><th>AI条件</th><th>天数</th><th>日期</th><th>轮次</th><th>注意力检测</th><th>危机词</th><th>对话原文</th><th>操作</th>
+        </tr></thead>
+        <tbody id="recBody"></tbody>
+      </table>
+    </div>
+    <p class="hint">说明：每条记录 = 一名被试一天完成的会话。「对话原文」仅在被试上传了完整记录 json 时可用；仅导入结果码的记录只有量表得分等汇总数据。</p>
+
+    <h2 class="sec-gap">导出</h2>
+    <div class="row">
+      <button id="btnCsv" class="primary">导出会话汇总 CSV（每天一行）</button>
+      <button id="btnJson">导出完整 JSON（含对话）</button>
+      <button id="btnTxt">导出对话转录 TXT</button>
+    </div>
+
+    <div class="row row-gap">
+      <button id="btnClear" class="ghost danger">清空本地数据</button>
+      <a class="hint backlink" href="index.html">返回实验页面</a>
+    </div>
+    <p class="hint">注意：数据保存在<b>当前浏览器</b>的本地存储（localStorage）中，仅在这台电脑的这个浏览器里可见。请在每次导入后及时导出 CSV / JSON 备份；清理浏览器缓存或换电脑都会导致本地数据丢失。协作者之间请通过导出的文件传递数据。另：数据以手机号作为被试编号，含个人信息，请妥善保管。</p>
+  </section>
+</div>
+
+<div id="chatModal" class="modal hidden">
+  <div class="modalbox">
+    <div class="row modalhead">
+      <b id="modalTitle"></b>
+      <button id="btnCloseModal" class="ghost">关闭</button>
+    </div>
+    <div id="modalBody" class="chat chat-modal"></div>
+  </div>
+</div>
+
+<script src="assets/admin.js"></script>
+</body>
+</html>
