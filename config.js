@@ -178,7 +178,7 @@ window.APP_CONFIG = {
         "type": "scale",
         "anchor": "likert7",
         "score": "mean",
-        "title": "同伴支持（MSPSS 同伴/朋友支持分量表，4题）",
+        "title": "以下想法你的同意程度为？",
         "items": [
           "我遇到问题时，朋友们会真心想帮我",
           "遇到困难时，我可以向朋友求助",
@@ -191,7 +191,7 @@ window.APP_CONFIG = {
         "type": "scale",
         "anchor": "ucla4",
         "score": "mean",
-        "title": "孤独感（UCLA 简版，8题）",
+        "title": "以下想法你的同意程度为？",
         "items": [
           "我缺乏同伴的陪伴",
           "没有人可以让我求助",
@@ -208,7 +208,7 @@ window.APP_CONFIG = {
         "type": "scale",
         "anchor": "freq4",
         "score": "sum",
-        "title": "过去两周，您有多少时候受到以下问题的困扰？（PHQ-9）",
+        "title": "过去两周，您有多少时候受到以下问题的困扰？",
         "items": [
           "做事时提不起劲或没有兴趣",
           "感到心情低落、沮丧或绝望",
@@ -226,7 +226,7 @@ window.APP_CONFIG = {
         "type": "scale",
         "anchor": "freq4",
         "score": "sum",
-        "title": "过去两周，您有多少时候受到以下问题的困扰？（GAD-7）",
+        "title": "过去两周，您有多少时候受到以下问题的困扰？",
         "items": [
           "感觉紧张、焦虑或急切",
           "不能停止或控制担忧",
@@ -242,7 +242,7 @@ window.APP_CONFIG = {
         "type": "scale",
         "anchor": "likert7",
         "score": "mean",
-        "title": "主观幸福感 SWLS（5题，前测）",
+        "title": "以下想法你的同意程度为？",
         "items": [
           "我的生活在大多数方面都接近于我的理想",
           "我的生活条件很好",
@@ -256,7 +256,7 @@ window.APP_CONFIG = {
         "type": "scale",
         "anchor": "likert7",
         "score": "mean",
-        "title": "社会融合／社会幸福感（4题，前测）",
+        "title": "以下想法你的同意程度为？",
         "items": [
           "我感觉自己归属于现实生活中的线下社群",
           "我与现实生活中周围的人有紧密的联系",
@@ -271,7 +271,7 @@ window.APP_CONFIG = {
         "type": "scale",
         "anchor": "likert7",
         "score": "mean",
-        "title": "感知亲密度（3题）",
+        "title": "你是否认同以下对聊天机器人的想法？",
         "items": [
           "我在情感上感觉和这个聊天机器人很亲近",
           "我觉得这个聊天机器人像一个懂我的朋友",
@@ -283,7 +283,7 @@ window.APP_CONFIG = {
         "type": "scale",
         "anchor": "likert7",
         "score": "mean",
-        "title": "操纵检验：你感知到的AI情绪智能（BEIS-10 核心4题）",
+        "title": "你是否能感知到以下对AI情绪智能的感受？",
         "items": [
           "这个聊天机器人能识别我话语中的情绪",
           "这个聊天机器人能理解我的感受",
@@ -296,7 +296,7 @@ window.APP_CONFIG = {
         "type": "scale",
         "anchor": "likert7",
         "score": "mean",
-        "title": "主观幸福感 SWLS（5题，后测）",
+        "title": "你对以下想法的同意程度为？",
         "items": [
           "我的生活在大多数方面都接近于我的理想",
           "我的生活条件很好",
@@ -310,7 +310,7 @@ window.APP_CONFIG = {
         "type": "scale",
         "anchor": "likert7",
         "score": "mean",
-        "title": "社会融合／社会幸福感（4题，后测）",
+        "title": "你对以下想法的同意程度为？",
         "items": [
           "我感觉自己归属于现实生活中的线下社群",
           "我与现实生活中周围的人有紧密的联系",
@@ -353,7 +353,7 @@ window.APP_CONFIG = {
     "type": "scale",
     "anchor": "likert7",
     "score": "mean",
-    "title": "人-AI 人格感知一致性（2题）",
+    "title": "你对以下想法的同意程度为？",
     "items": [
       "我觉得这个AI的性格和我很像",
       "我认为这个AI思考问题的方式与我相似"
