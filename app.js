@@ -1,4 +1,4 @@
-/* 静态版（七日实验）：无需自建服务器即可运行。
+/* 静态版（五日实验）：无需自建服务器即可运行。
    说明：浏览器直连大模型 API 通常会被 CORS 拦截，且会暴露密钥。
    正式施测请在 config.js 中填写 proxyUrl（部署 tools/proxy-worker.js 即可）。
    本版核心变化：
@@ -12,31 +12,25 @@
   var $ = function (id) { return document.getElementById(id); };
   var state = { pid: '', sid: '', group: '', condition: '', stratum: '', day: 1, t1: null, t2: null, turns: 0, msgs: [], crisis: 0, userChars: 0, aiChars: 0, startedAt: '' };
   var user = null; /* 当前手机号在本机的档案 */
-
   var show = function (id) {
     ['step-login', 'step-consent', 'step-t1', 'step-chat', 'step-t2', 'step-done'].forEach(function (s) {
       $(s).classList.toggle('hidden', s !== id);
     });
     window.scrollTo(0, 0);
   };
-
   var mean = function (a) { var v = (a || []).filter(function (x) { return typeof x === 'number' && !isNaN(x); }); return v.length ? v.reduce(function (a, b) { return a + b; }, 0) / v.length : null; };
   var sum = function (a) { var v = (a || []).filter(function (x) { return typeof x === 'number' && !isNaN(x); }); return v.length ? v.reduce(function (a, b) { return a + b; }, 0) : null; };
   var round = function (x) { return x === null ? null : Math.round(x * 10000) / 10000; };
-
   /* ---------- 日期工具（均按被试本机自然日） ---------- */
   function pad2(n) { return (n < 10 ? '0' : '') + n; }
   function fmtDate(d) { return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
   function todayStr() { return fmtDate(new Date()); }
   function dayDiff(a, b) { return Math.round((new Date(a + 'T00:00:00') - new Date(b + 'T00:00:00')) / 86400000); }
   function addDays(s, n) { var d = new Date(s + 'T00:00:00'); d.setDate(d.getDate() + n); return fmtDate(d); }
-  function totalDays() { return (C.study && C.study.totalDays) || 7; }
+  function totalDays() { return (C.study && C.study.totalDays) || 5; }
   function needT2(day) {
-    var t = (C.study && C.study.t2Days) || 'all';
-    if (t === 'all') return true;
-    return Array.isArray(t) && t.indexOf(day) >= 0;
+    return day >= totalDays(); /* 只在最后一天（第5天）对话结束后做问卷，其余天直接完成 */
   }
-
   /* ---------- 被试档案（本机 localStorage，按手机号区分） ---------- */
   function loadUser(pid) {
     try { return JSON.parse(localStorage.getItem('gsx_user_' + pid) || 'null'); } catch (e) { return null; }
@@ -50,7 +44,6 @@
     if (C.assignment !== 'random' && u && u.group && C.groups && C.groups[u.group]) return C.groups[u.group].cond;
     return (u && u.cond) || '';
   }
-
   function renderForm(container, blocks, prefix) {
     container.innerHTML = '';
     blocks.forEach(function (b, bi) {
@@ -60,7 +53,6 @@
       title.className = 'qtitle';
       title.textContent = (bi + 1) + '. ' + b.title;
       box.appendChild(title);
-
       if (b.type === 'single') {
         b.options.forEach(function (opt) {
           var l = document.createElement('label');
@@ -90,7 +82,6 @@
       container.appendChild(box);
     });
   }
-
   function collect(blocks, prefix) {
     var out = {}, missing = null;
     blocks.forEach(function (b) {
@@ -114,7 +105,6 @@
     });
     return { data: out, missing: missing };
   }
-
   function bubble(role, text) {
     var d = document.createElement('div');
     d.className = 'bubble ' + role;
@@ -122,7 +112,6 @@
     $('chatLog').appendChild(d);
     $('chatLog').scrollTop = $('chatLog').scrollHeight;
   }
-
   /* 组别选择（manual 模式）：由被试按研究人员告知的组号选择，决定接入哪一套 AI */
   function initGroupSel() {
     var box = $('groupSel');
@@ -134,7 +123,6 @@
     });
     box.innerHTML = html + '</div>';
   }
-
   /* 当前组生效的 LLM 配置：全局 llm + 组内覆盖（model / temperature / proxyUrl 等） */
   function groupCfg() {
     var g = (state.group && C.groups && C.groups[state.group]) || {};
@@ -144,7 +132,6 @@
     l.proxyUrl = g.proxyUrl || C.proxyUrl || '';
     return l;
   }
-
   /* 分组：manual = 被试所选组别映射到对应 AI 条件；random = 首日随机、之后延续。
      同伴支持分层仅作记录；第 2 天起沿用基线同伴支持得分，保证分层稳定。 */
   function assign(peer) {
@@ -158,11 +145,9 @@
     else state.condition = Math.random() < 0.5 ? 'high' : 'low';
     if (!g && user) { user.cond = state.condition; saveUser(); }
   }
-
   function crisisHit(text) {
     return (C.crisisKeywords || []).some(function (k) { return String(text).indexOf(k) >= 0; });
   }
-
   function llmMessages(userText) {
     var cond = C.conditions[state.condition] || {};
     var sys = cond.system;
@@ -191,19 +176,16 @@
     msgs.push({ role: 'user', content: userText });
     return msgs;
   }
-
   function mockReply() {
     var pool = C.mockReplies[state.condition] || [];
     return pool[state.turns % pool.length] + '（测试模式样例回复）';
   }
-
   function endpoint() {
     var l = groupCfg();
     if (l.proxyUrl) return { url: l.proxyUrl, headers: { 'Content-Type': 'application/json' }, useProxy: true };
     if (l.mock || !l.api_key) return null;
     return { url: String(l.base_url).replace(/\/+$/, '') + '/chat/completions', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + l.api_key }, useProxy: false };
   }
-
   async function generate(userText) {
     var ep = endpoint();
     if (!ep) return mockReply();
@@ -215,7 +197,6 @@
     var c = d && d.choices && d.choices[0] && d.choices[0].message ? d.choices[0].message.content : '';
     return String(c || '').trim();
   }
-
   async function send(text, auto) {
     $('btnSend').disabled = true;
     $('chatErr').classList.add('hidden');
@@ -241,7 +222,6 @@
     $('btnSend').disabled = false;
     $('chatInput').focus();
   }
-
   function scoreOf(id, blocks) {
     var b = blocks.filter(function (x) { return x.id === id; })[0];
     if (!b) return null;
@@ -249,7 +229,6 @@
     if (!arr) return null;
     return b.score === 'sum' ? round(sum(arr)) : round(mean(arr));
   }
-
   function buildResult() {
     var all = (C.scales.t1 || []).concat(C.scales.t2 || []);
     var r = {
@@ -268,25 +247,21 @@
     r.att_pass = state.t2 ? (att.every(function (b) { return state.t2[b.id] === b.attention; }) ? 1 : 0) : null;
     return r;
   }
-
   function b64(obj) {
     return btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
   }
-
   function download(name, text) {
     var a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([text], { type: 'application/json;charset=utf-8' }));
     a.download = name;
     a.click();
   }
-
   async function submit(result) {
     if (!C.submitEndpoint) return;
     try {
       await fetch(C.submitEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(result) });
     } catch (e) { /* 提交失败仍保留结果码与下载 */ }
   }
-
   /* 完成当天对话后向 worker 上报一条轻量记录（可选；config.reportUrl 未配置则跳过） */
   function sendReport(result) {
     if (!C.reportUrl) return;
@@ -301,7 +276,6 @@
       }).catch(function () { });
     } catch (e) { }
   }
-
   /* ---------- 天数进度条 ---------- */
   function renderDayBar() {
     var total = totalDays();
@@ -322,7 +296,6 @@
       '<span class="dots">' + dots + '</span>' +
       '<span class="dtdisp">' + todayStr() + '</span></div>' + missedYest;
   }
-
   /* ---------- 每日会话 ---------- */
   async function prepAndChat() {
     if (!user.firstDay) { user.firstDay = todayStr(); saveUser(); } /* 第1天 = 首次与AI对话当天 */
@@ -346,7 +319,6 @@
     show('step-chat');
     await send(C.opening, true);
   }
-
   /* 已同意的被试进入当天流程：基线问卷只做一次，之后每天直接对话 */
   async function beginSession() {
     if (!user.t1done) {
@@ -357,7 +329,6 @@
       await prepAndChat();
     }
   }
-
   function finish() {
     var result = buildResult();
     var code = b64(result);
@@ -381,7 +352,6 @@
     sendReport(result);
     submit(result);
   }
-
   /* 当天再次登录：展示“今天已完成”与当天结果码 */
   function showDoneToday() {
     var rec = (user.days && user.days[todayStr()]) || {};
@@ -395,7 +365,6 @@
     if (isLast) $('condLabel').textContent = (C.conditions[condOf(user)] || {}).label || condOf(user);
     show('step-done');
   }
-
   /* 第 totalDays+1 天起：实验全部完成 */
   function showFinished() {
     var total = totalDays();
@@ -408,7 +377,6 @@
     $('condLabel').textContent = (C.conditions[condOf(user)] || {}).label || condOf(user);
     show('step-done');
   }
-
   /* ---------- 事件 ---------- */
   $('btnLogin').onclick = function () {
     var phone = $('phone').value.trim();
@@ -427,7 +395,6 @@
     show('step-consent');
   };
   $('phone').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('btnLogin').click(); });
-
   $('btnConsent').onclick = async function () {
     var grp = document.querySelector('input[name="grp"]:checked');
     if (C.assignment !== 'random' && C.groups && !grp) return alert('请选择您的实验分组（由研究人员告知）');
@@ -437,7 +404,6 @@
     saveUser();
     await beginSession();
   };
-
   $('btnT1').onclick = async function () {
     var r = collect(C.scales.t1, 't1_');
     if (r.missing) {
@@ -453,7 +419,6 @@
     $('btnT1').disabled = true;
     await prepAndChat();
   };
-
   $('btnSend').onclick = function () {
     var t = $('chatInput').value.trim();
     if (t) send(t, false);
@@ -461,7 +426,6 @@
   $('chatInput').addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) $('btnSend').click();
   });
-
   $('btnEndChat').onclick = function () {
     if (needT2(state.day)) {
       renderForm($('t2Form'), C.scales.t2, 't2_');
@@ -470,7 +434,6 @@
       finish();
     }
   };
-
   $('btnT2').onclick = async function () {
     var r = collect(C.scales.t2, 't2_');
     if (r.missing) {
@@ -487,19 +450,16 @@
     $('btnT2').disabled = true;
     finish();
   };
-
   $('btnCopy').onclick = function () {
     $('resultCode').select();
     try { document.execCommand('copy'); $('btnCopy').textContent = '已复制'; } catch (e) { alert('请手动全选复制'); }
   };
-
   $('btnDownload').onclick = function () {
     var payload = user.lastPayload || (state.msgs.length ? { result: buildResult(), messages: state.msgs } : null);
     if (!payload) return alert('暂无可下载的记录');
     download('result_' + state.pid + '_day' + (payload.result.day || 'x') + '_' + String(payload.result.sid || '').slice(0, 8) + '.json',
       JSON.stringify(payload, null, 2));
   };
-
   initGroupSel();
   show('step-login');
 })();
