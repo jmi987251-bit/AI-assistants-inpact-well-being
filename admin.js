@@ -1,4 +1,4 @@
-/* 研究者数据中心（admin.html）— 七日实验版
+/* 研究者数据中心（admin.html）— 五日实验版
    数据来源：
      1) 被试粘贴回问卷的结果码 / 被试页面「下载完整记录」的 json
         （按 sid 去重；v3 结果码含天数与日期，旧格式按时间戳推导日期）；
@@ -28,7 +28,7 @@
   function todayStr() { return fmtDate(new Date()); }
   function dayDiff(a, b) { return Math.round((new Date(a + 'T00:00:00') - new Date(b + 'T00:00:00')) / 86400000); }
   function addDays(s, n) { var d = new Date(s + 'T00:00:00'); d.setDate(d.getDate() + n); return fmtDate(d); }
-  function totalDays() { return (C.study && C.study.totalDays) || 7; }
+  function totalDays() { return (C.study && C.study.totalDays) || 5; }
   /* 记录的会话日期：优先 v3 的 date 字段，旧格式按结束/开始时间戳推导 */
   function recDate(res) { return res.date || String(res.ended || res.started || '').slice(0, 10) || ''; }
 
