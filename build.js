@@ -12,7 +12,7 @@ const prompts = read('prompts.json');
 const scales = read('scales.json');
 
 const out = {
-  minTurns: cfg.min_turns || 7,
+  minTurns: cfg.min_turns || 5,
   peerLow: cfg.peer_low_cut,
   peerHigh: cfg.peer_high_cut,
   llm: cfg.llm,
