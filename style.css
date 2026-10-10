@@ -126,7 +126,7 @@ a.err { color: #C23A3A; }
 .modalhead b { margin-right: auto; font-weight: 500; }
 .chat-modal { height: auto; max-height: 60vh; margin-bottom: 0; }
 
-/* ---- 七日实验：天数进度条（被试端） ---- */
+/* ---- 五日实验：天数进度条（被试端） ---- */
 .daybar { margin: 0 0 14px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; background: #F6F9FD; }
 .dayline { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .dayline b { font-size: 15px; }
