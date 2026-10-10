@@ -239,6 +239,8 @@
       age: state.t1 ? (state.t1.age || '') : '',
       edu: state.t1 ? (state.t1.edu || '') : '',
       ai_exp: state.t1 ? (state.t1.ai_exp || '') : '',
+      major: state.t1 ? (state.t1.major || '') : '',
+      hometown: state.t1 ? (state.t1.hometown || '') : '',
       t2History: user.t2History || {},
       started: state.startedAt, ended: new Date().toISOString()
     };
