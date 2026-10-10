@@ -186,18 +186,6 @@ window.APP_CONFIG = {
         ]
       },
       {
-        "id": "income",
-        "type": "single",
-        "title": "您的家庭月收入水平属于（人民币）",
-        "options": [
-          "5000 元及以下",
-          "5001 到 10000 元",
-          "10001 到 20000 元",
-          "20001 到 40000 元",
-          "40000 元以上"
-        ]
-      },
-      {
         "id": "ai_exp",
         "type": "single",
         "title": "过去6个月使用生成式AI（如ChatGPT、DeepSeek、豆包等）的频率",
