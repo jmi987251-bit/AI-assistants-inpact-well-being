@@ -315,6 +315,21 @@ window.APP_CONFIG = {
         ]
       },
       {
+        "id": "att1",
+        "type": "single",
+        "title": "本题请选择“1 非常不同意”",
+        "options": [
+          "1 非常不同意",
+          "2",
+          "3",
+          "4 中立",
+          "5",
+          "6",
+          "7 非常同意"
+        ],
+        "attention": "1 非常不同意"
+      },
+      {
         "id": "swls_t2",
         "type": "scale",
         "anchor": "likert7",
@@ -342,24 +357,9 @@ window.APP_CONFIG = {
         ]
       },
       {
-        "id": "att1",
-        "type": "single",
-        "title": "注意力检测：本题请选择“1 非常不同意”",
-        "options": [
-          "1 非常不同意",
-          "2",
-          "3",
-          "4 中立",
-          "5",
-          "6",
-          "7 非常同意"
-        ],
-        "attention": "1 非常不同意"
-      },
-      {
         "id": "att2",
         "type": "single",
-        "title": "注意力检测：本题请选择“4 中立”",
+        "title": "本题请选择“4 中立”",
         "options": [
           "1 非常不同意",
           "2",
